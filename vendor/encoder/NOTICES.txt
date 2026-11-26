@@ -1,0 +1,37 @@
+KazeX Morph browser MP4 encoder
+
+encoder.wasm contains minih264, minimp4 and C runtime support. The two
+upstream codec/muxer headers are included verbatim under
+tools/encoder/upstream in the KazeX Morph source repository.
+
+minih264 (H.264 encoder)
+  https://github.com/lieff/minih264/tree/207dee34b6996cc51570ca3b92f2f98c76176749
+  CC0 1.0 Universal. See licenses/CC0-1.0.txt.
+
+minimp4 (MP4 muxer)
+  https://github.com/lieff/minimp4/tree/741a704744895416258daef4a789965c528130c2
+  Based on https://github.com/aspt/mp4
+  CC0 1.0 Universal. See licenses/CC0-1.0.txt.
+
+Build toolchain and runtime
+  Zig 0.14.1 / zig cc, wasm32-wasi, MVP instruction set.
+  https://github.com/ziglang/zig/tree/0.14.1
+  https://github.com/ziglang/zig/tree/0.14.1/lib/libc/wasi
+  Zig contributions: licenses/Zig-MIT.txt.
+  wasi-libc: licenses/wasi-libc-notice.txt, licenses/wasi-libc-MIT.txt,
+  licenses/wasi-libc-Apache-2.0.txt, licenses/wasi-libc-LLVM-exception.txt.
+  Third-party runtime notices: licenses/musl-COPYRIGHT.txt,
+  licenses/cloudlibc-BSD.txt, licenses/emmalloc.txt, licenses/CC0-1.0.txt.
+  emmalloc copyright 2018 The Emscripten Authors.
+
+Rebuilding
+  Install Zig 0.14.1 and Python 3. From the repository root, run
+      python3 tools/encoder/build.py
+  Set ZIG to the Zig executable path if it is not on PATH.
+  The script verifies the source checksums, sets the H.264 colour metadata
+  and minimum level, and gives the movie and video track matching 90 kHz
+  timescales. The encoder produces one video sample for each supplied frame.
+  All inputs, compiled sources and exported video stay on the device at runtime.
+
+  Shipped encoder.wasm SHA-256
+  93580e68970aa28fba9b32321a4fd0eb148a2374acc6cd9f12225b527a1778d2

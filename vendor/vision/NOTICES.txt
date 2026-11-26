@@ -1,0 +1,21 @@
+KazeX Morph vision engine
+
+opencv-morph.wasm contains the project's C++ wrapper and portions of OpenCV
+5.1.0, compiled from the upstream release with Emscripten 4.0.23.
+opencv-morph.mjs is the matching Emscripten-generated loader.
+
+The adjacent LICENSES.txt contains the upstream licenses and copyright
+notices for redistribution. The build uses:
+
+• OpenCV core, imgproc, video, features, geometry and flann. The release
+  license is Apache-2.0. Individual sources also include BSD and other
+  notices, including those for DIS, SIFT, FLANN, SoftFloat and fdlibm.
+  Source: https://github.com/opencv/opencv/tree/5.1.0
+• zlib from the OpenCV source distribution (zlib license).
+• Emscripten JavaScript glue and runtime (MIT or University of
+  Illinois/NCSA), musl libc (MIT and file-specific terms), Doug Lea's
+  dlmalloc (public domain), LLVM compiler-rt, libc++ and libc++abi
+  (Apache-2.0 with LLVM exceptions and accompanying legacy notices).
+  Toolchain: https://github.com/emscripten-core/emscripten/tree/4.0.23
+
+The wrapper and build recipe are in tools/vision in the project source tree.

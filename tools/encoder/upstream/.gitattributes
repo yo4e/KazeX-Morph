@@ -1,0 +1,2 @@
+# Preserve the exact pinned upstream bytes used in build.py.
+*.h -text

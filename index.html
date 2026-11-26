@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' blob: data:; media-src blob: 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#141716">
+  <link rel="icon" href="data:,">
+  <meta name="description" content="複数の静止画をモーフィングでつなぐ、ブラウザ内で動くMP4書き出しツール。">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+  <title>KazeX Morph</title>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div class="brand"><span class="mark" aria-hidden="true"></span><h1>KazeX <span>Morph</span></h1></div>
+      <p class="privacy"><span aria-hidden="true"></span>画像はブラウザ内で処理</p>
+    </header>
+
+    <form id="editor">
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">素材画像</h2>
+        <p class="hint">2枚以上の静止画をつないで、MP4を書き出します。構図や被写体の位置が近い画像が向いています。</p>
+        <div class="pair">
+          <div class="source">
+            <div class="frame-label"><b aria-hidden="true">A</b><label for="file-a">開始画像<span class="sr-only"> A</span></label></div>
+            <div class="dropzone" id="zone-a">
+              <input type="file" id="file-a" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="info-a">
+              <img id="preview-a" alt="開始画像 A のプレビュー" hidden>
+              <div class="pick"><span class="add" aria-hidden="true"></span><span class="pick-title">画像を選ぶ</span><small>またはここにドロップ</small></div>
+              <span class="replace" aria-hidden="true">画像を変更</span>
+            </div>
+            <p class="file-info" id="info-a">JPEG / PNG / WebP</p>
+          </div>
+          <div class="direction" aria-hidden="true">→</div>
+          <div class="source">
+            <div class="frame-label"><b aria-hidden="true">B</b><label for="file-b">終了画像<span class="sr-only"> B</span></label></div>
+            <div class="dropzone" id="zone-b">
+              <input type="file" id="file-b" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="info-b">
+              <img id="preview-b" alt="終了画像 B のプレビュー" hidden>
+              <div class="pick"><span class="add" aria-hidden="true"></span><span class="pick-title">画像を選ぶ</span><small>またはここにドロップ</small></div>
+              <span class="replace" aria-hidden="true">画像を変更</span>
+            </div>
+            <p class="file-info" id="info-b">JPEG / PNG / WebP</p>
+          </div>
+        </div>
+        <div class="middle-panel">
+          <div class="middle-head">
+            <h3>中間画像 <small>任意・最大10枚</small></h3>
+            <label class="middle-picker" for="file-middle"><span aria-hidden="true">＋</span> 中間画像を追加<input id="file-middle" type="file" multiple accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-describedby="middle-info"></label>
+          </div>
+          <p id="sequence">再生順　A → B</p>
+          <ol id="middle-list" aria-label="中間画像の再生順"></ol>
+          <p id="middle-info" role="status">複数枚をまとめて選べます。</p>
+        </div>
+        <p class="format-note">動画の縦横比はAに合わせます。縦横比の異なる画像は中央でトリミングします。</p>
+      </section>
+
+      <section class="settings" aria-labelledby="settings-title">
+        <div class="settings-head"><h2 id="settings-title">書き出し設定</h2><span class="format">MP4</span></div>
+        <div class="method-row field"><label for="method">モーフ方式</label><select id="method" name="method" aria-describedby="method-help">
+          <option value="flow">なめらかモーフ（従来）</option>
+          <option value="rigid">カメラモーフ（位置合わせ）</option>
+          <option value="dissolve">クロスディゾルブ（重ね合わせ）</option>
+        </select><p id="method-help" aria-live="polite">近い位置の形を対応させて、画像の各部分を少しずつ変形します。</p></div>
+        <div class="control-row">
+          <div class="field"><label for="seconds">長さ</label><div class="number"><input id="seconds" name="seconds" type="number" min="1" max="30" step="0.1" value="4" required><span>秒</span></div></div>
+          <div class="field"><label for="fps">フレームレート</label><select id="fps" name="fps">
+            <option value="12">12 fps</option><option value="15">15 fps</option><option value="24" selected>24 fps</option><option value="25">25 fps</option><option value="30">30 fps</option><option value="48">48 fps</option><option value="50">50 fps</option><option value="60">60 fps</option>
+          </select></div>
+          <div class="field frames-output"><label for="frame-count">総フレーム数</label><output id="frame-count" for="seconds fps">96</output><span> 枚</span></div>
+          <button id="render" type="submit" disabled><span class="play-icon" aria-hidden="true"></span>MP4を書き出す</button>
+        </div>
+        <p id="timing-note">長さ × フレームレートを1フレーム単位で四捨五入します。</p>
+      </section>
+      <div class="feedback">
+        <noscript><p>このツールを使うには、ブラウザのJavaScriptを有効にしてください。</p></noscript>
+        <p id="status" role="status" aria-live="polite">開始画像Aと終了画像Bを選ぶと書き出せます。</p>
+        <span id="progress-percent" aria-hidden="true" hidden>0%</span>
+        <progress id="progress" aria-label="書き出しの進み具合" max="1" value="0" hidden></progress>
+      </div>
+    </form>
+
+    <section class="result" id="result" aria-labelledby="result-title" hidden>
+      <div class="result-head"><h2 id="result-title">直前に書き出した動画</h2><a id="download" download="KazeX-Morph.mp4"><span aria-hidden="true">↓</span> MP4を保存</a></div>
+      <p id="result-meta"></p>
+      <video id="video" controls playsinline preload="metadata" aria-label="書き出したモーフ動画"></video>
+      <p id="preview-note" class="hint" role="status" hidden>このブラウザでプレビューを再生できません。「MP4を保存」から動画を保存して再生してください。</p>
+    </section>
+    <footer><a href="./notices.html">ライセンス情報</a></footer>
+  </main>
+</body>
+</html>

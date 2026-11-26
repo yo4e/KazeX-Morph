@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ライセンス情報 | KazeX Morph</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root { color-scheme: dark; font: 16px/1.75 system-ui, sans-serif; color: #f0f2eb; background: #141716; }
+    main { max-width: 43rem; padding: 2.5rem 1.25rem; margin: auto; }
+    h1 { margin-top: 1.5rem; font-size: 1.9rem; }
+    h2 { font-size: 1.15rem; margin-top: 2rem; }
+    a { color: #b8eccb; text-underline-offset: .2em; }
+    footer { margin-top: 3rem; border-top: 1px solid #404741; padding-top: 1rem; color: #bdc6bf; }
+  </style>
+</head>
+<body><main>
+  <a href="./">← KazeX Morph に戻る</a>
+  <h1>ライセンス情報</h1>
+  <p>KazeX Morph は、次のソフトウェアを組み込んで画像処理と動画の書き出しを行います。配布ファイルには各ライブラリと実行環境の著作権表示・ライセンスを同梱しています。</p>
+  <h2>画像の位置合わせと変形</h2>
+  <p>OpenCV 5.1.0（Apache License 2.0）をWebAssembly用にビルドし、オプティカルフローと特徴点の位置合わせに使っています。</p>
+  <p><a href="./vendor/vision/NOTICES.txt">OpenCVと同梱コンポーネントの出典</a> · <a href="./vendor/vision/LICENSES.txt">ライセンス全文</a></p>
+  <h2>H.264とMP4</h2>
+  <p>minih264とminimp4を使ってブラウザ内でエンコードし、MP4にまとめます。上流の両ライブラリはCC0で提供されています。</p>
+  <p><a href="./vendor/encoder/NOTICES.txt">エンコーダーの出典・ライセンス・変更内容</a> · <a href="./vendor/encoder/licenses/CC0-1.0.txt">CC0 1.0 全文</a></p>
+  <footer>© 2026 KazeX Morph contributors · <a href="https://github.com/yo4e/KazeX-Morph">ソースコード</a></footer>
+</main></body>
+</html>
